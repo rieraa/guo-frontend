@@ -1,34 +1,31 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import { Routes, Route } from 'react-router-dom';
+import LayoutPc from './pages/Layout';
+import { HistoryRouter, history } from './utils/history';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <div className="App">
-      <div className="flex justify-between px-10">
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
-  )
+    //路由配置
+    <HistoryRouter history={history}>
+      <ConfigProvider locale={zhCN}>
+        <div className='App'>
+          <Routes>
+            {/* 创建路由 path 和对应组件的关系 */}
+            {/* 需要鉴权的路由 */}
+            <Route
+              path='/'
+              element={
+                <AuthRoute>
+                  <LayoutPc />
+                </AuthRoute>
+              }></Route>
+            <Route path='/register' element={<Rejister />} />
+            <Route path='/login' element={<Login />} />
+          </Routes>
+        </div>
+      </ConfigProvider>
+    </HistoryRouter>
+  );
 }
 
-export default App
+export default App;

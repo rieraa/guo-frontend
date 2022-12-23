@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "antd": "^5.1.0",
     "axios": "^1.2.1",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
