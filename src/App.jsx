@@ -1,12 +1,15 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import LayoutPc from './pages/Layout';
-import { HistoryRouter, history } from './utils/history';
-import './App.css';
+import { ConfigProvider } from 'antd';
+import zhCN from 'antd/es/locale/zh_CN';
+import 'antd/dist/reset.css';
+import StudyHome from './pages/Home';
 
 function App() {
   return (
     //路由配置
-    <HistoryRouter history={history}>
+
+    <BrowserRouter>
       <ConfigProvider locale={zhCN}>
         <div className='App'>
           <Routes>
@@ -15,16 +18,18 @@ function App() {
             <Route
               path='/'
               element={
-                <AuthRoute>
-                  <LayoutPc />
-                </AuthRoute>
-              }></Route>
-            <Route path='/register' element={<Rejister />} />
-            <Route path='/login' element={<Login />} />
+                // <AuthRoute>
+                <LayoutPc />
+                // </AuthRoute>
+              }>
+              <Route index element={<StudyHome />} />
+            </Route>
+            {/* <Route path='/register' element={<Rejister />} />
+            <Route path='/login' element={<Login />} /> */}
           </Routes>
         </div>
       </ConfigProvider>
-    </HistoryRouter>
+    </BrowserRouter>
   );
 }
 
