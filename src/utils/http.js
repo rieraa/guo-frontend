@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { getToken } from './token'
+import {getToken} from './token'
+
 const http = axios.create({
     // baseURL: 'http://localhost:8888',
     baseURL: 'https://service-152jj3l2-1315061125.gz.apigw.tencentcs.com/release/',
@@ -35,4 +36,4 @@ http.interceptors.response.use((response) => {
     // return Promise.reject(error)
 })
 
-export { http }
+export {http}
