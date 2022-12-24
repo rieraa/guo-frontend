@@ -34,7 +34,7 @@ const StudyHome = () => {
                   {item.courseName}
                 </div>
                 <p className='font-light text-slate-500'>
-                  章节数 {item.chapterQuantity}
+                  章节数  {item.chapterQuantity}
                 </p>
               </div>
             </div>
