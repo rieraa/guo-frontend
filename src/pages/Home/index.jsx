@@ -17,7 +17,7 @@ const StudyHome = () => {
   }, []);
 
   return (
-    <div className=' mx-auto px-12 bg-slate-100'>
+    <div className=' mx-auto px-12 bg-slate-100 '>
       {/* list start*/}
       <div className=' flex flex-wrap pt-6 justify-start '>
         {/* card start*/}
