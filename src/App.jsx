@@ -5,7 +5,7 @@ import StudyHome from './pages/Home';
 import Chapter from './pages/Chapter';
 import LearnVideo from './pages/LearnVideo';
 
-function App() {
+function App () {
   return (
     //路由配置
     <BrowserRouter>
