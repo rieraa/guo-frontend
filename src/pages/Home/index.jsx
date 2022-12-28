@@ -6,10 +6,7 @@ const StudyHome = () => {
   const [courese, setCourse] = useState([]);
   useEffect(() => {
     const getList = async () => {
-      const res = await http.post(
-        'http://127.0.0.1:4523/m1/2033778-0-default/api/student/courseInfo/search',
-        {}
-      );
+      const res = await http.post('/api/courseinfo/search', {});
       const { results } = res.data;
       setCourse(results);
     };
@@ -34,7 +31,7 @@ const StudyHome = () => {
                   {item.courseName}
                 </div>
                 <p className='font-light text-slate-500'>
-                  章节数  {item.chapterQuantity}
+                  章节数 {item.chapterQuantity}
                 </p>
               </div>
             </div>
