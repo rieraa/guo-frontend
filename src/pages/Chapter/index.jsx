@@ -1,4 +1,4 @@
-import Video from "../../assets/fx_1.mp4";
+import Video from "https://oooooo.oss-cn-fuzhou.aliyuncs.com/img/VOCALOID%20-%20Hatsune%20Miku.mp4";
 import { Form, Switch, Tree, Space } from 'tdesign-react';
 import { VmMaintenance } from 'grommet-icons'
 import 'tdesign-react/es/style/index.css';
