@@ -1,4 +1,4 @@
-// import Video from "https://oooooo.oss-cn-fuzhou.aliyuncs.com/img/VOCALOID%20-%20Hatsune%20Miku.mp4";
+
 import { Form, Switch, Tree, Space } from 'tdesign-react';
 import { VmMaintenance } from 'grommet-icons'
 import 'tdesign-react/es/style/index.css';
@@ -30,6 +30,8 @@ const items = [
   },
 ];
 
+const video = "https://oooooo.oss-cn-fuzhou.aliyuncs.com/img/unicorn2.mp4"
+
 
 
 
@@ -40,7 +42,7 @@ export default function Chapter () {
       <div className=" flex-col items-center justify-center w-7/12    ml-12">
         {/* 头部视频介绍 */}
         <div className="flex justify-center h-80 ">
-          {/* <video controls className=" w-2/3 h-80 object-cover rounded-lg" src={Video}></video> */}
+          <video controls className=" w-2/3 h-80 object-cover rounded-lg" src={video}></video>
 
           <div className="mx-6">
 
@@ -64,7 +66,7 @@ export default function Chapter () {
         <div className=" flex-col justify-start pt-5 items-center my-2">
           <p className="text-gray-700 text-base font-semibold tracking-wider h-10 flex items-center font-sans">软件设计体系结构</p>
           <div className="pt-2  ">
-            <Tree class="tree" data={items} activable hover transition expandMutex  />
+            <Tree class="tree" data={items} activable hover transition expandMutex />
           </div>
 
 
