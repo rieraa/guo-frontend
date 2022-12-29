@@ -1,9 +1,9 @@
 import axios from 'axios'
-import {getToken} from './token'
+import { getToken } from './token'
 
 const http = axios.create({
     // baseURL: 'http://localhost:8888',
-    baseURL: 'https://service-152jj3l2-1315061125.gz.apigw.tencentcs.com/release/',
+    baseURL: 'http://127.0.0.1:4523/m1/2033778-0-default/',
     timeout: 5000
 })
 // 添加请求拦截器
@@ -36,4 +36,4 @@ http.interceptors.response.use((response) => {
     // return Promise.reject(error)
 })
 
-export {http}
+export { http }
