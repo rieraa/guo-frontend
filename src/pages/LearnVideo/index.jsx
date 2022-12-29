@@ -13,6 +13,26 @@ const LearnVideo = () => {
     const res = CommentStore.findReplyItemById(rootId, preId);
     return res.username;
   };
+  const getPlaceHolder = (item) => {
+    const name =
+      CommentStore.getCurrentReply(item.commentId) === item.commentId
+        ? item.username
+        : CommentStore.findItemById(
+            item.commentId,
+            CommentStore.getCurrentReply(item.commentId)
+          ).commentContent;
+    // 通过此方法获取到当前的评论对象
+    if (CommentStore.getCurrentReply(item.commentId) !== item.commentId) {
+      console.log(
+        CommentStore.findItemById(
+          item.commentId,
+          CommentStore.getCurrentReply(item.commentId)
+        )
+      );
+    }
+
+    return '回复' + name + ':';
+  };
   useEffect(() => {
     const getInfo = async () => {
       await CommentStore.getAllCom('1', '1');
@@ -96,12 +116,23 @@ const LearnVideo = () => {
                               node.className = 'mx-auto flex';
                               svg.className =
                                 'w-6 h-6 transition-colors text-sky-300';
+                              // 再点评论时使得回复对象重置为根评论
+                              if (
+                                CommentStore.findReplyById(item.commentId) !==
+                                undefined
+                              ) {
+                                CommentStore.setCommentReplyId(
+                                  item.commentId,
+                                  item.commentId
+                                );
+                              }
                             } else {
                               node.className = 'hidden';
                               svg.className =
                                 'w-6 h-6 transition-colors hover:text-sky-300 text-slate-400';
                             }
 
+                            // 首次点击评论进行获取
                             if (
                               CommentStore.findReplyById(item.commentId) ===
                               undefined
@@ -129,9 +160,10 @@ const LearnVideo = () => {
                         type='text'
                         className='h-20 bg-slate-100 rounded-md font-sans text-slate-800 py-3 px-3
                       focus:outline-none text-sm placeholder:text-slate-400 appearance-none w-full'
-                        placeholder='请输入回复的内容~'
+                        placeholder={getPlaceHolder(item)}
                         // value={''}
-                        // onInput={() => {}}
+                        // onInput={() => {
+                        // }}
                       />
                       <div className='flex justify-between text-slate-400 mb-5'>
                         <p>
@@ -192,7 +224,14 @@ const LearnVideo = () => {
                                     </p>
                                   </>
                                 )}
-                                <button className='flex'>
+                                <button
+                                  className='flex'
+                                  onClick={() => {
+                                    CommentStore.setCommentReplyId(
+                                      item.rootId,
+                                      item.commentId
+                                    );
+                                  }}>
                                   <ArrowUpOnSquareIcon className='w-4 h-4 text-indigo-300'></ArrowUpOnSquareIcon>
                                   <p className=' text-indigo-300 text-sm ml-1'>
                                     回复
