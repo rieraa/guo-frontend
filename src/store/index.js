@@ -1,7 +1,8 @@
 import React from 'react'
-
+import CommentStore from './commentStore'
 class RootStore {
     constructor() {
+        this.CommentStore = new CommentStore()
     }
 }
 
