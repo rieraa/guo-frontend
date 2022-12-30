@@ -28,6 +28,28 @@ class comment {
             })
         })
     }
+    // 发布评论回复视频
+    async publishCom (chapterId, userId, commentContent, username) {
+        const res = await http.post('/comment/create', {
+            chapterId,
+            userId,
+            commentContent,
+            username
+        })
+        return res
+    }
+    // 回复评论
+    async replyComment (commentContent, userId, username, chapterId, rootId, preId) {
+        const res = await http.post('/reply', {
+            commentContent,
+            userId,
+            username,
+            chapterId,
+            rootId,
+            preId
+        })
+        return res
+    }
     // 获取评论列表
     findReplyById (rootId) {
         let res = this.reList.find((item) => item.rootId === rootId)

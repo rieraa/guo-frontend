@@ -1,8 +1,10 @@
 import React from 'react'
 import CommentStore from './commentStore'
+import UserStore from './userStore'
 class RootStore {
     constructor() {
         this.CommentStore = new CommentStore()
+        this.UserStore = new UserStore()
     }
 }
 
