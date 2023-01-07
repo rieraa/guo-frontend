@@ -113,7 +113,6 @@ export default function Chapter() {
             }
         });
 
-
     };
 
     // 获取到所有的章节资源
@@ -123,6 +122,8 @@ export default function Chapter() {
         })
         // console.log(res.data.result)
         rawDateProcess(res.data.result)
+
+
     }
 
     // 获取视频链接资源

@@ -4,4 +4,4 @@ const getAva = () => {
     return ava
 }
 
-export { getAva }
+export {getAva}
