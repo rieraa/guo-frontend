@@ -1,22 +1,46 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Swiper, Input } from 'tdesign-react';
+import { Swiper, Button, Pagination, Select } from 'tdesign-react';
 import cover from '../../assets/coverIMG.jpg';
-import Pagination_Ti from '../../components/Pagination';
 import { http } from '../../utils/http';
 const { SwiperItem } = Swiper;
 const StudyHome = () => {
   const navigate = useNavigate();
+  // 课程列表
   const [courese, setCourse] = useState([]);
-  const [value, onChange] = useState('Hello TDesign');
+  // search关键字
+  const [value, onChange] = useState('');
+  //
+  const [pagination, setPagination] = useState({
+    total: 100,
+    current: 1,
+  });
+  const [type, setType] = useState('0');
+  const [types, setTypes] = useState([]);
   useEffect(() => {
     const getList = async () => {
       const res = await http.post('/api/courseinfo/search', {});
+      const selRes = await http.get('/api/student/courseType/all');
       const { records } = res.data.results;
+      let list = selRes.data;
+      list.push({ typeId: '0', typeName: '查找全部' });
+      setPagination({ ...pagination, total: res.data.results.total });
+      setTypes(selRes.data);
       setCourse(records);
     };
     getList();
-  }, []);
+  }, [value, pagination.current, type]);
+
+  // 切换页数时
+  const onCurrentChange = async (current) => {
+    const res = await http.post('/api/courseinfo/search', {
+      currentPage: current,
+      search: value,
+      typeId: type,
+    });
+    setPagination(...pagination, current);
+    setCourse(res.data.results);
+  };
 
   return (
     <div className=' mx-auto px-14 bg-slate-100'>
@@ -58,20 +82,34 @@ const StudyHome = () => {
           </p>
         </div>
       </div>
-      <div>
-        <Input
+      <div className='flex items-center ml-3 mt-6 border-b-2 pb-6'>
+        <input
+          className='h-12 bg-slate-200 rounded-md font-sans text-slate-800 py-3 px-3
+          focus:outline-none text-sm placeholder:text-slate-400 appearance-none w-2/5'
           placeholder='请输入内容'
           value={value}
-          clearable
-          onChange={(value) => {
-            onChange(value);
-          }}
-          onClear={() => {
-            console.log('onClear');
+          onChange={(e) => {
+            onChange(e.target.value);
           }}
         />
+        <Button className='h-12'>搜索</Button>
+        <div className='flex items-center ml-16 w-full'>
+          <p>课程类别：</p>
+          <Select
+            value={type}
+            onChange={(value) => {
+              setType(value);
+            }}
+            filterable={true}
+            clearable
+            style={{ width: '20%' }}
+            keys={{
+              label: 'typeName',
+              value: 'typeId',
+            }}
+            options={types}></Select>
+        </div>
       </div>
-
       {/* list start*/}
       <div className=' flex flex-wrap pt-12 justify-start '>
         {/* card start*/}
@@ -84,7 +122,11 @@ const StudyHome = () => {
                 navigate(`chapter?id=${item.courseId}`);
               }}>
               <div className=' w-full h-44'>
-                <img className='w-full h-full' src={cover} alt='' />
+                <img
+                  className='w-full h-full'
+                  src={item.coverImg || cover}
+                  alt=''
+                />
               </div>
               <div className='p-3 space-y-2'>
                 <div className='font-bold text-xl text-slate-600'>
@@ -100,7 +142,26 @@ const StudyHome = () => {
         {/* card end*/}
       </div>
       {/* list end */}
-      <Pagination_Ti></Pagination_Ti>
+      <div className=' pb-4'>
+        <Pagination
+          defaultCurrent={pagination.current}
+          defaultPageSize={30}
+          foldedMaxPageBtn={5}
+          maxPageBtn={10}
+          pageEllipsisMode='mid'
+          pageSizeOptions={[5, 10, 20, 50]}
+          showFirstAndLastPageBtn={false}
+          showJumper={false}
+          showPageNumber
+          showPageSize={false}
+          showPreviousAndNextBtn
+          size='medium'
+          theme='default'
+          total={pagination.total}
+          totalContent
+          onCurrentChange={onCurrentChange}
+        />
+      </div>
     </div>
   );
 };
