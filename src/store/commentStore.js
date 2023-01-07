@@ -1,13 +1,20 @@
 import { http } from "../utils";
 import { makeAutoObservable, runInAction } from "mobx";
 class comment {
+    // 存放主评论，一维数组
     commentList = []
-    // 记录对应的评论状态，与commentList等长，记录每个的rootId和回复的commentId
+    // 记录对应的评论状态，与commentList等长，记录每个主评论的rootId和当前回复的commentId（默认为rootId）
     markCommentReply = []
+    // 存放子评论列表，是一个二维数组，只有当点击查看子评论的时候才会加载数据
     reList = []
+    // 存放视频资源 
+    resource = {}
+
+
     constructor() {
         makeAutoObservable(this)
     }
+    // 加载所有评论
     async getAllCom (chapterId, userId) {
         const res = await http.post('/student/getcomments', {
             chapterId, userId
@@ -17,6 +24,7 @@ class comment {
         })
         return res
     }
+    // 根据评论Id加载子评论列表
     async getReById (commentId) {
         const res = await http.get(`/allreply?commentId=${commentId}`)
         runInAction(() => {
@@ -38,8 +46,9 @@ class comment {
         })
         return res
     }
-    // 回复评论
-    async replyComment (commentContent, userId, username, chapterId, rootId, preId) {
+    // 回复视频评论
+    async replyComment (commentContent, userId, username, chapterId, rootId) {
+        const preId = this.getCurrentReply(rootId)
         const res = await http.post('/reply', {
             commentContent,
             userId,
@@ -47,6 +56,16 @@ class comment {
             chapterId,
             rootId,
             preId
+        })
+        return res
+    }
+    // 获取视频资源
+    async getResource (courseId, chapterId) {
+        const res = await http.post('/student/video', {
+            courseId, chapterId
+        })
+        runInAction(() => {
+            this.resource = res.data
         })
         return res
     }

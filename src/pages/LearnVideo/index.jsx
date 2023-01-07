@@ -1,18 +1,25 @@
 import ava from '../../assets/ava.jpg';
-import { http } from '../../utils/http';
 import {
   ChatBubbleBottomCenterIcon,
   ArrowUpOnSquareIcon,
 } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store';
 const LearnVideo = () => {
-  const { CommentStore } = useStore();
+  const navigate = useNavigate();
+  const { CommentStore, UserStore } = useStore();
+
+  const [replyText, setReplyText] = useState('');
+  const [replyItemText, setReplyItemText] = useState('');
+
+  // 获取回复评论人的姓名，用于评论列表
   const getReName = (rootId, preId) => {
     const res = CommentStore.findReplyItemById(rootId, preId);
     return res.username;
   };
+  // 当点击不同人的回复按钮时，对应回复的提示也会改变
   const getPlaceHolder = (item) => {
     const name =
       CommentStore.getCurrentReply(item.commentId) === item.commentId
@@ -30,12 +37,21 @@ const LearnVideo = () => {
         )
       );
     }
-
     return '回复' + name + ':';
   };
+
   useEffect(() => {
     const getInfo = async () => {
-      await CommentStore.getAllCom('1', '1');
+      // 验证是否登录
+      const res = await UserStore.getUserinfo();
+      if (res.code === 0) {
+        // 获取评论和视频资源
+        await CommentStore.getAllCom('1', '1');
+        await CommentStore.getResource('1', '1');
+        console.log(CommentStore.resource.video);
+      } else {
+        navigate('/login');
+      }
     };
     getInfo();
   }, []);
@@ -55,9 +71,10 @@ const LearnVideo = () => {
 
           {/* video start */}
           <div className=' flex justify-center'>
-            <video controls width='800'>
-              <source src='/media/cc0-videos/flower.mp4' type='video/mp4' />
-            </video>
+            <video
+              controls
+              width='800'
+              src={CommentStore.resource.video}></video>
           </div>
           {/* video end */}
 
@@ -74,8 +91,10 @@ const LearnVideo = () => {
                   className='h-12 bg-slate-100 rounded-md font-sans text-slate-800 py-3 px-3
                     focus:outline-none text-sm placeholder:text-slate-400 appearance-none w-full'
                   placeholder='发一条友善的评论~'
-                  // value={''}
-                  // onInput={() => {}}
+                  value={replyText}
+                  onInput={(e) => {
+                    setReplyText(e.target.value);
+                  }}
                 />
               </div>
 
@@ -112,6 +131,7 @@ const LearnVideo = () => {
                           onClick={async () => {
                             let node = document.getElementById(item.commentId);
                             let svg = document.getElementById(item.commentTime);
+                            // 首先是回复列表状态的切换
                             if (node.className === 'hidden') {
                               node.className = 'mx-auto flex';
                               svg.className =
@@ -161,9 +181,10 @@ const LearnVideo = () => {
                         className='h-20 bg-slate-100 rounded-md font-sans text-slate-800 py-3 px-3
                       focus:outline-none text-sm placeholder:text-slate-400 appearance-none w-full'
                         placeholder={getPlaceHolder(item)}
-                        // value={''}
-                        // onInput={() => {
-                        // }}
+                        value={replyItemText}
+                        onInput={(e) => {
+                          setReplyItemText(e.target.value);
+                        }}
                       />
                       <div className='flex justify-between text-slate-400 mb-5'>
                         <p>

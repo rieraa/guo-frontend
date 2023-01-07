@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import StudyHome from './pages/Home';
 import Chapter from './pages/Chapter';
 import LearnVideo from './pages/LearnVideo';
-
+import { AuthRoute } from './components/Auth';
 function App() {
   return (
     //路由配置
@@ -23,7 +23,15 @@ function App() {
             }>
             <Route index element={<StudyHome />} />
             <Route path='chapter' element={<Chapter />} />
-            <Route path='video' element={<LearnVideo />} />
+
+            <Route
+              path='video'
+              element={
+                <AuthRoute>
+                  <LearnVideo />
+                </AuthRoute>
+              }
+            />
           </Route>
           <Route path='/register' element={<Register />} />
           <Route path='/login' element={<Login />} />

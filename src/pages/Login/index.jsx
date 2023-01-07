@@ -19,7 +19,7 @@ function Login() {
       if (res.code === 0) {
         document.cookie = `token=${loginStore.token}`;
         MessagePlugin.success('登录成功');
-        navigate('/');
+        navigate(-1, { replace: true });
       } else {
         MessagePlugin.error('登录失败');
       }
