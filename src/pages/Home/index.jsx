@@ -9,8 +9,8 @@ const StudyHome = () => {
   useEffect(() => {
     const getList = async () => {
       const res = await http.post('/api/courseinfo/search', {});
-      const { results } = res.data;
-      setCourse(results);
+      const { records } = res.data.results;
+      setCourse(records);
     };
     getList();
   }, []);
