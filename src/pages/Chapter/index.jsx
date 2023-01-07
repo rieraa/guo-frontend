@@ -16,6 +16,9 @@ export default function Chapter() {
     const [item, setItem] = useState([])
     // 存储视频资源url
     const [videoUrl, setVideoUrl] = useState("https://prod-streaming-video-msn-com.akamaized.net/a8c412fa-f696-4ff2-9c76-e8ed9cdffe0f/604a87fc-e7bc-463e-8d56-cde7e661d690.mp4")
+    //储存课程信息
+    const [courseIntroduction,setcourseIntroduction] = useState()
+    const [courseType,setCourseType] = useState()
 
     //获取到路由中的课程id
     const location = useLocation()
@@ -23,6 +26,7 @@ export default function Chapter() {
     const courseId = msg.get('id')
 
 
+    //对原始章节数据进行处理
     const rawDateProcess = (rawDate) => {
         let okDate = []
         let len = rawDate.length
@@ -55,7 +59,6 @@ export default function Chapter() {
                 while (j < okDate.length) {
                     if (okDate[j].keys == parent) {
                         okDate[j].children.push({label: chapterName, child: false, id: chapterId})
-                        console.log("appearance")
                         j = j + 1
 
                         break
@@ -68,7 +71,7 @@ export default function Chapter() {
             i = i + 1
         }
 
-        console.log(okDate)
+
 
 
         i = 0
@@ -83,7 +86,6 @@ export default function Chapter() {
             if (rootChapterId !== "0") {
                 while (j < okDate.length) {
                     let long = okDate[j].children.length
-                    console.log("okDate[" + j + "]=" + okDate[j].children[long - 1].id + "")
                     if (okDate[j].children[long - 1].id === parent) {
                         okDate[j].children.push({label: chapterName, child: false, id: chapterId})
                         j = j + 1
@@ -96,12 +98,7 @@ export default function Chapter() {
             }
             i = i + 1
         }
-
-
         setItem(okDate)
-        console.log(okDate)
-
-
         i = 0
 
     }
@@ -110,28 +107,52 @@ export default function Chapter() {
     const handleClickChapter = (context) => {
         // console.info('onClick', context);
         console.log(context.node.data.id)
-        navigate(`/video?chId=${context.node.data.id}&coId=${courseId}`,{
-            state:{
-                chapterName:context.node.data.label
+        navigate(`/video?chId=${context.node.data.id}&coId=${courseId}`, {
+            state: {
+                chapterName: context.node.data.label
             }
         });
 
 
     };
 
+    // 获取到所有的章节资源
     async function getAllChapter() {
         let res = await http.post('/api/chapter/all', {
             "courseId": courseId
         })
-        console.log(res.data.result)
+        // console.log(res.data.result)
         rawDateProcess(res.data.result)
     }
+
+    // 获取视频链接资源
+    async function getVideoInfo() {
+        let res = await http.get('/api/cr/covervideo', {
+            "courseId": courseId
+        })
+        setVideoUrl(res.data.video)
+
+    }
+
+    //获取课程介绍
+    async function getCourseIntroduction() {
+        let res = await http.get('/api/course/getinfo', {
+            "courseId": courseId
+        })
+        console.log(res.data.courseType)
+        setcourseIntroduction(res.data.logContent)
+    }
+
+   
+
+
 
     useEffect(() => {
         // dom操作
         // 获取路径里的参数章节号
-        const res = getAllChapter()
-
+        getAllChapter().then(r => console.log("获取目录成功"))
+        getVideoInfo().then(r => console.log("获取视频URL成功"))
+        getCourseIntroduction().then(r => console.log("获取课程信息成功"))
 
     }, [])
 
@@ -143,22 +164,19 @@ export default function Chapter() {
                 {/* 头部视频介绍 */}
                 <div className="flex justify-center h-80 ">
                     <video controls className=" w-2/3 h-80 object-cover rounded-lg" src={videoUrl}></video>
-                    `
+
 
                     <div className="mx-6">
 
                         <p className="text-gray-700 text-lg font-medium tracking-wider h-10 flex items-center font-sans">课程介绍</p>
 
                         <p className="tracking-wider text-base text-gray-400 h-60 py-2 font-medium font-sans">
-                            这种事实对本人来说意义重大，相信对这个世界也是有一定意义的。
-                            我认为， 冯学峰曾经提到过，当一个人用工作去迎接光明，光明很快就会来照耀着他。
-                            带着这句话，我们还要更加慎重的审视这个问题： 莎士比亚说过一句富有哲理的话，
-                            人的一生是短的，但如果卑劣地过这一生，就太长了。我希望诸位也能好好地体会这句话。
+                            {courseIntroduction}
                         </p>
                         <ul className="flex h-10 justify-end ">
                             <li className="flex text-xl items-center space-x-1">
                                 <VmMaintenance color='rgb(209 213 219)' size='small'/>
-                                <p className="text-xs tracking-wider text-gray-300 font-sans ">视频分类:wall</p>
+                                <p className="text-xs tracking-wider text-gray-300 font-sans pt-5 ">视频分类:教育</p>
                             </li>
                         </ul>
                     </div>
@@ -174,7 +192,6 @@ export default function Chapter() {
                             activable
                             hover
                             transition
-                            expandMutex
                             onClick={handleClickChapter}
                         />
                     </div>
