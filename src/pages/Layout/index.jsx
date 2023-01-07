@@ -1,5 +1,5 @@
 import { Fragment } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import { Popover, Transition } from '@headlessui/react';
 import {
   ArrowPathIcon,
@@ -288,16 +288,16 @@ export default function LayoutPc() {
               </Popover>
             </Popover.Group>
             <div className='hidden items-center justify-end md:flex md:flex-1 lg:w-0'>
-              <a
-                href='#'
+              <Link
+                to='/login'
                 className='whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900'>
-                Sign in
-              </a>
-              <a
-                href='#'
+                登录
+              </Link>
+              <Link
+                to='/register'
                 className='ml-8 inline-flex items-center justify-center whitespace-nowrap rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700'>
-                Sign up
-              </a>
+                注册
+              </Link>
             </div>
           </div>
         </div>
@@ -372,18 +372,18 @@ export default function LayoutPc() {
                   ))}
                 </div>
                 <div>
-                  <a
-                    href='#'
+                  <Link
+                    to='/register'
                     className='flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700'>
-                    Sign up
-                  </a>
+                    注册
+                  </Link>
                   <p className='mt-6 text-center text-base font-medium text-gray-500'>
                     Existing customer?{' '}
-                    <a
-                      href='#'
+                    <Link
+                      to='/login'
                       className='text-indigo-600 hover:text-indigo-500'>
-                      Sign in
-                    </a>
+                      登录
+                    </Link>
                   </p>
                 </div>
               </div>

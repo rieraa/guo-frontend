@@ -1,11 +1,12 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import LayoutPc from './pages/Layout';
-
+import Register from './pages/Register';
+import Login from './pages/Login';
 import StudyHome from './pages/Home';
 import Chapter from './pages/Chapter';
 import LearnVideo from './pages/LearnVideo';
 
-function App () {
+function App() {
   return (
     //路由配置
     <BrowserRouter>
@@ -24,8 +25,8 @@ function App () {
             <Route path='chapter' element={<Chapter />} />
             <Route path='video' element={<LearnVideo />} />
           </Route>
-          {/* <Route path='/register' element={<Rejister />} />
-            <Route path='/login' element={<Login />} /> */}
+          <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
         </Routes>
       </div>
     </BrowserRouter>
