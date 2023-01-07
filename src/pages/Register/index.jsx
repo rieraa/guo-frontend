@@ -1,25 +1,29 @@
 import React from 'react';
-import { Form, Input, Button, MessagePlugin } from 'tdesign-react';
-
+import { Form, Input, Button, MessagePlugin, Upload } from 'tdesign-react';
+import { useStore } from '../../store';
+import { useNavigate } from 'react-router-dom';
+import { getAva } from '../../utils/index';
+import './index.scss';
 const { FormItem } = Form;
 
 export default function BaseForm() {
   const form = React.createRef();
-
-  const onSubmit = (e) => {
+  const navigate = useNavigate();
+  const { registerStore } = useStore();
+  let codeimg = getAva();
+  const onSubmit = async (e) => {
     console.log(e);
     if (e.validateResult === true) {
-      MessagePlugin.info('提交成功');
+      const res = await registerStore.register({
+        avatar: codeimg,
+        username: e.e.target[0].value,
+        password: e.e.target[1].value,
+      });
+      if (res.code === 0) {
+        MessagePlugin.success('注册成功');
+        navigate(-1);
+      } else MessagePlugin.error('注册失败');
     }
-  };
-
-  const onReset = (e) => {
-    console.log(e);
-    MessagePlugin.info('重置成功');
-  };
-
-  const resetValidate = () => {
-    form.current.clearValidate();
   };
 
   // 自定义异步校验器
@@ -32,36 +36,31 @@ export default function BaseForm() {
     });
   }
 
-  // 自定义异步校验器
-  function validateName(name) {
-    const names = ['张三', '李四', '王五'];
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(!names.includes(name));
-      }, 1000);
-    });
-  }
-
   // 自定义校验器，不同的值输出不同的校验结果。支持异步校验（文案选自某密码重置站点，如有侵权，请联系我们删除）
   function passwordValidator(val) {
-    if (!val || (val.length > 0 && val.length <= 2)) {
+    if (val.length < 4) {
       return {
         result: false,
-        message: '太简单了！再开动一下你的小脑筋吧！',
-        type: 'error',
-      };
-    }
-    if (val.length > 2 && val.length < 4) {
-      return {
-        result: false,
-        message: '还差一点点，就是一个完美的密码了！',
+        message: '密码长度不小于4！',
         type: 'warning',
       };
     }
     return {
       result: true,
-      message: '太强了，你确定自己记得住吗！',
       type: 'success',
+    };
+  }
+
+  function beforeUpload(file) {
+    //读取文件的字符流
+    console.log(file[0]);
+    const reader = new FileReader();
+    //将文件读取为 DataURL 以data:开头的字符串
+    reader.readAsDataURL(file[0]);
+    reader.onload = (e) => {
+      // 读取到的图片base64 数据编码 将此编码字符串传给后台即可
+      codeimg = e.target.result;
+      console.log(code);
     };
   }
 
@@ -69,12 +68,6 @@ export default function BaseForm() {
     account: [
       { required: true, message: '姓名必填', type: 'error' },
       { min: 2, message: '至少需要两个字', type: 'error' },
-      {
-        validator: validateName,
-        message: '该用户名已存在',
-        type: 'error',
-        trigger: 'blur',
-      },
     ],
     password: [
       { required: true, message: '密码必填', type: 'error' },
@@ -89,30 +82,53 @@ export default function BaseForm() {
   };
 
   return (
-    <Form
-      ref={form}
-      statusIcon={true}
-      onSubmit={onSubmit}
-      onReset={onReset}
-      labelWidth={100}
-      rules={rules}>
-      <FormItem label='用户名' name='account'>
-        <Input />
-      </FormItem>
-      <FormItem label='密码' name='password' initialData=''>
-        <Input />
-      </FormItem>
-      <FormItem label='确认密码' name='rePassword' initialData=''>
-        <Input />
-      </FormItem>
-      <FormItem style={{ marginLeft: 100 }}>
-        <Button theme='default' type='submit'>
-          返回
-        </Button>
-        <Button theme='primary' type='reset' style={{ margin: '0 12px' }}>
-          注册
-        </Button>
-      </FormItem>
-    </Form>
+    <div className='register'>
+      <div className='register-container p-7'>
+        <p className=' flex justify-center pb-3 text-lg text-slate-700'>
+          慕课在线学习平台
+        </p>
+        <Form
+          ref={form}
+          statusIcon={true}
+          onSubmit={onSubmit}
+          labelWidth={100}
+          rules={rules}>
+          <FormItem label='头像' name='avatar'>
+            <Upload
+              name='avatar'
+              autoUpload={false}
+              action='https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo'
+              theme='image'
+              tips='请选择单张图片文件上传'
+              accept='image/*'
+              onSelectChange={beforeUpload}></Upload>
+          </FormItem>
+          <FormItem label='用户名' name='account'>
+            <Input />
+          </FormItem>
+          <FormItem label='密码' name='password' initialData=''>
+            <Input />
+          </FormItem>
+          <FormItem label='确认密码' name='rePassword' initialData=''>
+            <Input />
+          </FormItem>
+          <FormItem style={{ marginLeft: 120 }}>
+            <Button
+              theme='default'
+              onClick={() => {
+                navigate(-1);
+              }}>
+              返回
+            </Button>
+            <Button
+              theme='primary'
+              type='submit'
+              style={{ marginLeft: '100px' }}>
+              注册
+            </Button>
+          </FormItem>
+        </Form>
+      </div>
+    </div>
   );
 }
