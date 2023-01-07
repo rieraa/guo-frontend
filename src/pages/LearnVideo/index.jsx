@@ -4,13 +4,13 @@ import {
   ArrowUpOnSquareIcon,
 } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import { useStore } from '../../store';
 const LearnVideo = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { CommentStore, UserStore } = useStore();
-
   const [replyText, setReplyText] = useState('');
   const [replyItemText, setReplyItemText] = useState('');
 
@@ -48,7 +48,7 @@ const LearnVideo = () => {
         // 获取评论和视频资源
         await CommentStore.getAllCom('1', '1');
         await CommentStore.getResource('1', '1');
-        console.log(CommentStore.resource.video);
+        console.log(location.state.chapterName);
       } else {
         navigate('/login');
       }
@@ -63,8 +63,14 @@ const LearnVideo = () => {
         <div className=' px-10 py-6 bg-white shadow-lg rounded-md mx-auto'>
           {/* title start*/}
           <div className='pb-2 flex justify-center'>
-            <div style={{ width: 800 }}>
-              <span>名字</span>
+            <div className='flex justify-between' style={{ width: 800 }}>
+              <span>{location.state.chapterName}</span>
+              <a
+                className=' text-sky-600 '
+                href={CommentStore.resource.pdf}
+                download={CommentStore.resource.pdf}>
+                下载课程PDF资源
+              </a>
             </div>
           </div>
           {/* title end*/}
