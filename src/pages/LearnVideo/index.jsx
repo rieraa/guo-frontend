@@ -14,6 +14,9 @@ const LearnVideo = () => {
   const [replyText, setReplyText] = useState('');
   const [replyItemText, setReplyItemText] = useState('');
 
+  const msg = new URLSearchParams(location.search);
+  const chapterId = msg.get('chId');
+  const courseId = msg.get('coId');
   // 获取回复评论人的姓名，用于评论列表
   const getReName = (rootId, preId) => {
     const res = CommentStore.findReplyItemById(rootId, preId);
@@ -39,6 +42,15 @@ const LearnVideo = () => {
     }
     return '回复' + name + ':';
   };
+  // 发布评论
+  const replyMain = async () => {
+    const res = await CommentStore.publishCom(
+      chapterId,
+      UserStore.userinfo.userId,
+      replyText,
+      UserStore.userinfo.username
+    );
+  };
 
   useEffect(() => {
     const getInfo = async () => {
@@ -46,8 +58,8 @@ const LearnVideo = () => {
       const res = await UserStore.getUserinfo();
       if (res.code === 0) {
         // 获取评论和视频资源
-        await CommentStore.getAllCom('1', '1');
-        await CommentStore.getResource('1', '1');
+        await CommentStore.getAllCom(chapterId, UserStore.userinfo.userId);
+        await CommentStore.getResource(courseId, chapterId);
         console.log(location.state.chapterName);
       } else {
         navigate('/login');
@@ -105,7 +117,9 @@ const LearnVideo = () => {
               </div>
 
               <div className='flex items-center justify-center text-white bg-sky-300 shadow-sm hover:bg-sky-400  transition-colors'>
-                <button className=' w-16 h-12 '>发布</button>
+                <button className=' w-16 h-12 ' onClick={replyMain}>
+                  发布
+                </button>
               </div>
             </div>
             {/* publish */}
@@ -200,7 +214,17 @@ const LearnVideo = () => {
                             : 0}
                           条评论
                         </p>
-                        <button className='hover:text-sky-300 hover:shadow-sm  transition-colors'>
+                        <button
+                          className='hover:text-sky-300 hover:shadow-sm  transition-colors'
+                          onClick={async () => {
+                            const res = await CommentStore.replyComment(
+                              replyItemText,
+                              UserStore.userinfo.userId,
+                              UserStore.userinfo.username,
+                              chapterId,
+                              item.commentId
+                            );
+                          }}>
                           发布评论
                         </button>
                       </div>

@@ -36,7 +36,7 @@ class comment {
             })
         })
     }
-    // 发布评论回复视频
+    // 发布评论回复章节内容
     async publishCom (chapterId, userId, commentContent, username) {
         const res = await http.post('/comment/create', {
             chapterId,
@@ -46,7 +46,7 @@ class comment {
         })
         return res
     }
-    // 回复视频评论
+    // 回复视频下方评论
     async replyComment (commentContent, userId, username, chapterId, rootId) {
         const preId = this.getCurrentReply(rootId)
         const res = await http.post('/reply', {
@@ -96,6 +96,7 @@ class comment {
     setCommentReplyId (rootId, commentId) {
         let obj = this.markCommentReply.find((item) => item.rootId === rootId)
         obj.commentId = commentId
+        console.log(obj)
     }
     // 获取当前回复的状态
     getCurrentReply (rootId) {

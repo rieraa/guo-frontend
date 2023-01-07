@@ -6,7 +6,7 @@ class userinfo {
         makeAutoObservable(this)
     }
     async getUserinfo () {
-        const res = http.get('/user/userinfo')
+        const res = await http.get('/user/userinfo')
         runInAction(() => {
             this.userinfo = res.data
         })
