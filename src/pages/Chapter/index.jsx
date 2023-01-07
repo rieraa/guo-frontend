@@ -4,131 +4,18 @@ import 'tdesign-react/es/style/index.css';
 import './index.css'
 import {useEffect, useState} from 'react';
 import {http} from "../../utils/index.js";
-import {useLocation} from "react-router-dom";
-
-
-const rawDate = [
-    {
-        "chapterId": "0d7ae599-6712-481f-ae06-2f1e96650b90",
-        "chapterName": "6.1 第六章第一小节修改版",
-        "preChapterId": "596ce82e-4437-4c56-b9b1-f02fa15ecda9",
-        "courseId": "1",
-        "rootChapterId": "596ce82e-4437-4c56-b9b1-f02fa15ecda9",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "1",
-        "chapterName": "第一章 软件架构设计概述",
-        "preChapterId": "0",
-        "courseId": "1",
-        "rootChapterId": "0",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "10",
-        "chapterName": "1.1 软件架构设计概述",
-        "preChapterId": "1",
-        "courseId": "1",
-        "rootChapterId": "1",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "11",
-        "chapterName": "第二章 GRASP设计原则",
-        "preChapterId": "1",
-        "courseId": "1",
-        "rootChapterId": "0",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "12",
-        "chapterName": "2.1 信息专家原则",
-        "preChapterId": "11",
-        "courseId": "1",
-        "rootChapterId": "11",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "13",
-        "chapterName": "2.2 创建者原则",
-        "preChapterId": "12",
-        "courseId": "1",
-        "rootChapterId": "11",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "14",
-        "chapterName": "第三章 设计模式",
-        "preChapterId": "11",
-        "courseId": "1",
-        "rootChapterId": "0",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "15",
-        "chapterName": "3.1",
-        "preChapterId": "14",
-        "courseId": "1",
-        "rootChapterId": "14",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "2",
-        "chapterName": "3.2 工厂模式",
-        "preChapterId": "15",
-        "courseId": "1",
-        "rootChapterId": "14",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "3",
-        "chapterName": "3.3 模式",
-        "preChapterId": "2",
-        "courseId": "1",
-        "rootChapterId": "14",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "4",
-        "chapterName": "第四章",
-        "preChapterId": "14",
-        "courseId": "1",
-        "rootChapterId": "0",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "5",
-        "chapterName": "4.1 第四章的第一小节",
-        "preChapterId": "4",
-        "courseId": "1",
-        "rootChapterId": "4",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "596ce82e-4437-4c56-b9b1-f02fa15ecda9",
-        "chapterName": "第六章",
-        "preChapterId": "123",
-        "courseId": "1",
-        "rootChapterId": "0",
-        "isDeleted": 0
-    },
-    {
-        "chapterId": "6",
-        "chapterName": "4.2 第四章的第二小节",
-        "preChapterId": "5",
-        "courseId": "1",
-        "rootChapterId": "4",
-        "isDeleted": 0
-    }
-];
-
-
-const video = "https://prod-streaming-video-msn-com.akamaized.net/a8c412fa-f696-4ff2-9c76-e8ed9cdffe0f/604a87fc-e7bc-463e-8d56-cde7e661d690.mp4"
+import {useLocation, useNavigate} from "react-router-dom";
 
 
 export default function Chapter() {
 
+    // 通过动态路由设置参数
+    const navigate = useNavigate();
+
+    // 存储章节数据
     const [item, setItem] = useState([])
+    // 存储视频资源url
+    const [videoUrl, setVideoUrl] = useState("https://prod-streaming-video-msn-com.akamaized.net/a8c412fa-f696-4ff2-9c76-e8ed9cdffe0f/604a87fc-e7bc-463e-8d56-cde7e661d690.mp4")
 
     //获取到路由中的课程id
     const location = useLocation()
@@ -138,14 +25,9 @@ export default function Chapter() {
 
     const rawDateProcess = (rawDate) => {
         let okDate = []
-        let childs = []
-        let child = []
         let len = rawDate.length
         let i = 0
         let j = 0
-        let m = 0
-
-
 
 
         //所有根节点
@@ -225,9 +107,15 @@ export default function Chapter() {
     }
 
     // 点击不同章节中的小节时进行跳转
-    const handleClick = (context) => {
+    const handleClickChapter = (context) => {
         // console.info('onClick', context);
         console.log(context.node.data.id)
+        navigate(`/video?chId=${context.node.data.id}&coId=${courseId}`,{
+            state:{
+                chapterName:context.node.data.label
+            }
+        });
+
 
     };
 
@@ -254,7 +142,7 @@ export default function Chapter() {
 
                 {/* 头部视频介绍 */}
                 <div className="flex justify-center h-80 ">
-                    <video controls className=" w-2/3 h-80 object-cover rounded-lg" src={video}></video>
+                    <video controls className=" w-2/3 h-80 object-cover rounded-lg" src={videoUrl}></video>
                     `
 
                     <div className="mx-6">
@@ -287,7 +175,7 @@ export default function Chapter() {
                             hover
                             transition
                             expandMutex
-                            onClick={handleClick}
+                            onClick={handleClickChapter}
                         />
                     </div>
 
