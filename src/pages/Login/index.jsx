@@ -54,7 +54,13 @@ function Login() {
             </Button>
           </FormItem>
         </Form>
-        <Button className=' mt-3' theme='default' block>
+        <Button
+          className=' mt-3'
+          theme='default'
+          block
+          onClick={() => {
+            navigate('/register');
+          }}>
           注册
         </Button>
       </div>

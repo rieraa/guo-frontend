@@ -7,7 +7,7 @@ class RegisterStore {
     register = async ({ avatar, username, password }) => {
         var time = new Date()
         const retime = time.toLocaleString()
-        const res = await http.post('/api/register', {
+        const res = await http.post('/api/auth/register', {
             username, password, avatar,
             createTime: retime,
             account: null,
