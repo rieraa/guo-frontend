@@ -2,9 +2,8 @@ import axios from 'axios'
 import { getToken } from './token'
 
 const http = axios.create({
-    // baseURL: 'http://localhost:8080',
-    baseURL: 'http://127.0.0.1:4523/m1/2033778-0-default',
 
+    baseURL: 'http://127.0.0.1:4523/m1/2033778-0-default',
     timeout: 5000,
     withCredentials: true
 })

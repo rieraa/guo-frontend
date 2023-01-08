@@ -1,4 +1,4 @@
-import ava from '../../assets/ava.jpg';
+import ava from '../../assets/defaultAva.jpg';
 import {
   ChatBubbleBottomCenterIcon,
   ArrowUpOnSquareIcon,
@@ -101,7 +101,11 @@ const LearnVideo = () => {
             {/* publish */}
             <div className='flex justify-center mb-4'>
               <div className=' h-12 w-12 rounded-full'>
-                <img className='rounded-full' src={ava} alt='' />
+                <img
+                  className='rounded-full'
+                  src={UserStore.userinfo.avatar || ava}
+                  alt=''
+                />
               </div>
               <div style={{ width: '650px' }} className='mx-4'>
                 <textarea
@@ -131,19 +135,21 @@ const LearnVideo = () => {
                     {/* 头像 */}
                     <div className=' h-12 w-12 rounded-full text-center'>
                       <img
-                        className='rounded-full w-full h-full'
-                        src={ava}
+                        className='rounded-full w-full'
+                        src={item.avatar || ava}
                         alt=''
                       />
-                      <span className=' text-slate-700'>{item.username}</span>
+                      <span className=' text-xs lg:text-base text-slate-700'>
+                        {item.username}
+                      </span>
                     </div>
                     {/* 头像 */}
                     {/* 评论内容 */}
-                    <div className=' py-4' style={{ width: '700px' }}>
-                      <p className=' px-4 mt-6 text-slate-700'>
+                    <div className=' py-4' style={{ width: '650px' }}>
+                      <p className=' px-2  lg:px-4 mt-6 text-slate-700'>
                         {item.commentContent}
                       </p>
-                      <div className='flex justify-between px-4 items-center'>
+                      <div className='flex justify-between px-2 lg:px-4 items-center'>
                         <p className=' text-slate-400 text-xs'>
                           {item.commentTime}
                         </p>
@@ -240,7 +246,7 @@ const LearnVideo = () => {
                                     <div className=' h-8 w-8 rounded-full'>
                                       <img
                                         className='rounded-full w-full h-full'
-                                        src={ava}
+                                        src={item.avatar || ava}
                                         alt=''
                                       />
                                     </div>

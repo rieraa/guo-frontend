@@ -2,7 +2,11 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Swiper, Button, Pagination, Select } from 'tdesign-react';
 import cover from '../../assets/coverIMG.jpg';
+import s1 from '../../assets/s1.jpg';
+import s2 from '../../assets/s2.jpg';
+import s3 from '../../assets/s3.jpg';
 import { http } from '../../utils/http';
+import './index.scss';
 const { SwiperItem } = Swiper;
 const StudyHome = () => {
   const navigate = useNavigate();
@@ -44,33 +48,29 @@ const StudyHome = () => {
 
   return (
     <div className=' mx-auto px-14 bg-slate-100'>
-      <div className='flex p-4'>
-        <div style={{ width: '600px', height: '300px' }}>
+      <div className='block xl:flex xl:p-4'>
+        <div
+          style={{ width: '600px', height: '300px' }}
+          className=' mx-auto mb-4'>
           <Swiper duration={300} interval={2000} autoplay trigger='hover'>
             <SwiperItem>
-              <div
-                style={{ width: '600px', height: '300px' }}
-                className='demo-item'>
-                <img className='h-full w-full' src={cover} alt='' />
+              <div className='myswiper h-72'>
+                <img className='h-full w-full' src={s1} alt='' />
               </div>
             </SwiperItem>
             <SwiperItem>
-              <div
-                style={{ width: '600px', height: '300px' }}
-                className='demo-item'>
-                <img className='h-full w-full' src={cover} alt='' />
+              <div className='myswiper h-72'>
+                <img className='h-full w-full' src={s2} alt='' />
               </div>
             </SwiperItem>
             <SwiperItem>
-              <div
-                style={{ width: '600px', height: '300px' }}
-                className='demo-item'>
-                <img className='h-full w-full' src={cover} alt='' />
+              <div className='myswiper h-72'>
+                <img className='h-full w-full' src={s3} alt='' />
               </div>
             </SwiperItem>
           </Swiper>
         </div>
-        <div className=' pl-7 text-slate-700'>
+        <div className=' sm:text-xs text-sm text-slate-700 xl:pl-7 xl:text-slate-700'>
           <h1 className=' text-2xl text-center font-semibold pb-4'>
             慕课学习网站
           </h1>
@@ -102,7 +102,7 @@ const StudyHome = () => {
             }}
             filterable={true}
             clearable
-            style={{ width: '20%' }}
+            style={{ width: '30%' }}
             keys={{
               label: 'typeName',
               value: 'typeId',
