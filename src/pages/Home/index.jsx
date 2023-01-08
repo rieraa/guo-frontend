@@ -16,14 +16,18 @@ const StudyHome = () => {
   const [value, onChange] = useState('');
   //
   const [pagination, setPagination] = useState({
-    total: 100,
+    total: 0,
     current: 1,
   });
   const [type, setType] = useState('0');
   const [types, setTypes] = useState([]);
   useEffect(() => {
     const getList = async () => {
-      const res = await http.post('/api/courseinfo/search', {});
+      const res = await http.post('/api/courseinfo/search', {
+        search: value,
+        typeId: type,
+        currentPage: pagination.current,
+      });
       const selRes = await http.get('/api/student/courseType/all');
       const { records } = res.data.results;
       let list = selRes.data;
