@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Swiper, Button, Pagination, Select } from 'tdesign-react';
+import { Swiper, Button, Pagination, Select, Guide } from 'tdesign-react';
 import cover from '../../assets/coverIMG.jpg';
 import s1 from '../../assets/s1.jpg';
 import s2 from '../../assets/s2.jpg';
@@ -21,6 +21,42 @@ const StudyHome = () => {
   });
   const [type, setType] = useState('0');
   const [types, setTypes] = useState([]);
+  const [current, setCurrent] = useState(-1);
+
+  const steps = [
+    {
+      element: '.main-title-base',
+      title: '欢迎来到慕课在线学习网站',
+      body: '丰富齐全的课程列表',
+      placement: 'bottom-right',
+    },
+    {
+      element: '.label-field-base',
+      title: '慕课学习使用教程',
+      body: '各种类型在此挑选',
+      placement: 'bottom',
+    },
+    {
+      element: '.action-base',
+      title: '慕课学习使用教程',
+      body: '在这里注册一个新用户吧，注册之后才能进行视频的免费观看',
+      placement: 'right',
+    },
+  ];
+  // 切换提示的时候
+  const handleChange = (current, { e, total }) => {
+    setCurrent(current);
+    console.log(current, e, total);
+  };
+  // 结束的时候
+  const handleFinish = ({ e, current, total }) => {
+    console.log('提示结束啦');
+    setCurrent(-1);
+  };
+  // 跳过的时候
+  const handleSkip = ({ e, current, total }) => {
+    setCurrent(-1);
+  };
   useEffect(() => {
     const getList = async () => {
       const res = await http.post('/api/courseinfo/search', {
@@ -37,6 +73,11 @@ const StudyHome = () => {
       setCourse(records);
     };
     getList();
+    if (localStorage.getItem('first') === null) {
+      localStorage.setItem('first', 'first');
+      setCurrent(0);
+    }
+    console.log('第一次来？', localStorage.getItem('first') === null);
   }, [value, pagination.current, type]);
 
   // 切换页数时
@@ -86,7 +127,7 @@ const StudyHome = () => {
           </p>
         </div>
       </div>
-      <div className='flex items-center ml-3 mt-6 border-b-2 pb-6'>
+      <div className='flex items-center ml-3 mt-6 border-b-2 pb-6 label-field-base'>
         <input
           className='h-12 bg-slate-200 rounded-md font-sans text-slate-800 py-3 px-3
           focus:outline-none text-sm placeholder:text-slate-400 appearance-none w-2/5'
@@ -115,7 +156,7 @@ const StudyHome = () => {
         </div>
       </div>
       {/* list start*/}
-      <div className=' flex flex-wrap pt-12 justify-start '>
+      <div className=' flex flex-wrap pt-12 justify-start main-title-base h-72'>
         {/* card start*/}
         {courese.map((item) => {
           return (
@@ -166,6 +207,13 @@ const StudyHome = () => {
           onCurrentChange={onCurrentChange}
         />
       </div>
+      <Guide
+        current={current}
+        steps={steps}
+        onChange={handleChange}
+        onFinish={handleFinish}
+        onSkip={handleSkip}
+      />
     </div>
   );
 };
